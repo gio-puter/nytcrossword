@@ -25,11 +25,11 @@ export default async function updateDatabase(request, response) {
         // const answerSet = new Set([...acrossSet, ...downSet]);
         const answerSet = [...acrossSet, ...downSet]
 
-        for (const jsonAnswer of answerSet) {
-            const answer = JSON.parse(jsonAnswer);
-            const {data, error} = await supabase
-                .from("daily")
-                .upsert(answerSet, {onConflict: ['clue', 'answer']})
+        // for (const jsonAnswer of answerSet) {
+        // const answer = JSON.parse(jsonAnswer);
+        const {data, error} = await supabase
+            .from("daily")
+            .upsert(answerSet, {onConflict: ['clue', 'answer']});
             // const { data, error } = await supabase
             //     .from('daily_answers')
             //     .upsert([
@@ -43,14 +43,12 @@ export default async function updateDatabase(request, response) {
             //         onConflict: ['clue', 'answer'] // Specify the conflict target
             //     });
 
-            if (error) {
-                console.error('Error inserting into Supabase:', error);
-                return response.status(500).json({ message: 'Failed to update the database' })
-            }
+        if (error) {
+            return response.status(500).json({ message: 'Failed to update the database', error: error})
         }
         return response.status(200).json({ message: 'Database successfully updated', pushedSet: answerSet});
     } catch (error) {
-        return response.status(500).json({ message: 'Failed to update the database' })
+        return response.status(500).json({ message: 'Failed to update the database', error: error})
     }
 
 }
