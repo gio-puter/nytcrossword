@@ -28,7 +28,7 @@ export default async function updateDatabase(request, response) {
 
         const {data, error} = await supabase
             .from("daily")
-            .upsert(answerSet, {onConflict: ['clue', 'answer']});
+            .upsert(answerSet, {onConflict: ['clue', 'answer'], ignoreDuplicates: true});
 
         if (error) {
             return response.status(500).json({ message: 'Failed to update the database', error: error.message})
@@ -59,7 +59,6 @@ function setFromClues(clueSet, puzzleDate, puzzleDotw, puzzleFill, step = 1) {
         };
 
         tempSet.add(puzzleDict)
-        // tempSet.add(JSON.stringify(puzzleDict));
     } catch (error) {
         console.error("Error processing clue:", error);
     }
