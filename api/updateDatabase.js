@@ -27,9 +27,9 @@ export default async function updateDatabase(request, response) {
 
         // for (const jsonAnswer of answerSet) {
         // const answer = JSON.parse(jsonAnswer);
-        const {data, error} = await supabase
-            .from("daily")
-            .upsert(answerSet, {onConflict: ['clue', 'answer']});
+        // const {data, error} = await supabase
+        //     .from("daily")
+        //     .upsert(answerSet, {onConflict: ['clue', 'answer']});
             // const { data, error } = await supabase
             //     .from('daily_answers')
             //     .upsert([
