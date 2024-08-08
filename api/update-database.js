@@ -12,7 +12,7 @@ export default async function updateDatabase(request, response) {
 
         const puzzleResp = await puzzle.json()
         
-        const puzzleData = puzzleResp.data.results[0];
+        const puzzleData = puzzleResp.results[0];
 
         const puzzleWidth = puzzleData.puzzle_meta.width;
         const puzzleDotw = puzzleData.puzzle_meta.printDotw;
