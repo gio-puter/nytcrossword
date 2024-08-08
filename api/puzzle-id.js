@@ -1,16 +1,20 @@
 import { createClient } from "@supabase/supabase-js";
-import axios from "axios";
 
 export default async function getRecentPuzzleID(req, res) {
     try {
-        const puzzleResp = await axios.get("https://www.nytimes.com/svc/crosswords/v3/puzzles.json", {
-            headers: {Cookie: `NYT-S=${process.env.NYT_COOKIE}`},
+        const puzzleResp = await fetch("https://www.nytimes.com/svc/crosswords/v3/puzzles.json", {
+            headers: { 'Cookie': `NYT-S=${process.env.NYT_COOKIE}` }
         });
-        
-        const puzzleInfo = puzzleResp.data.results[0];
+
+        if (!puzzleResp.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const puzzleData = await puzzleResp.json();
+        const puzzleInfo = puzzleData.results[0];
         const puzzleId = puzzleInfo.puzzle_id;
-        res.status(200).json({ puzzleId: puzzleId});
+        res.status(200).json({ puzzleId: puzzleId });
     } catch (error) {
-        res.status(200).json({ message: 'It no work' });
+        res.status(500).json({ message: 'It no work', error: error.message });
     }
 }
