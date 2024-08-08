@@ -10,7 +10,7 @@ export default async function updateDatabase(request, response) {
             headers: { 'Cookie': `NYT-S=${process.env.NYT_COOKIE}` }
         });
 
-        const puzzleResp = await puzzleResp.json()
+        const puzzleResp = await puzzle.json()
         
         const puzzleData = puzzleResp.data.results[0];
 
