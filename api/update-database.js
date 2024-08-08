@@ -6,12 +6,11 @@ export default async function updateDatabase(request, response) {
     try {
         const puzzleId = await getRecentPuzzleID();
 
-        return response.status(200).json({id: puzzleId});
-
-        // const puzzleResp = await fetch(`https://www.nytimes.com/svc/crosswords/v2/puzzle/${puzzleId}.json`, {
-        //     headers: { 'Cookie': `NYT-S=${process.env.NYT_COOKIE}` }
-        // });
-
+        const puzzleResp = await fetch(`https://www.nytimes.com/svc/crosswords/v2/puzzle/${puzzleId}.json`, {
+            headers: { 'Cookie': `NYT-S=${process.env.NYT_COOKIE}` }
+        });
+        
+        return response.status(200).json({id: puzzleId, result: puzzleResp});
         // const puzzleData = puzzleResp.data.results[0];
 
         // const puzzleWidth = puzzleData.puzzle_meta.width;
