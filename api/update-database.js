@@ -6,50 +6,35 @@ export default async function updateDatabase(request, response) {
     try {
         const puzzleId = await getRecentPuzzleID();
 
-        const puzzleResp = await fetch(`https://www.nytimes.com/svc/crosswords/v2/puzzle/${puzzleId}.json`, {
+        const puzzle = await fetch(`https://www.nytimes.com/svc/crosswords/v2/puzzle/${puzzleId}.json`, {
             headers: { 'Cookie': `NYT-S=${process.env.NYT_COOKIE}` }
         });
 
-        const puzzle = await puzzleResp.json()
+        const puzzleResp = await puzzleResp.json()
         
-        return response.status(200).json({id: puzzleId, result: puzzle, cookie: process.env.NYT_COOKIE});
-        // const puzzleData = puzzleResp.data.results[0];
+        const puzzleData = puzzleResp.data.results[0];
 
-        // const puzzleWidth = puzzleData.puzzle_meta.width;
-        // const puzzleDotw = puzzleData.puzzle_meta.printDotw;
-        // const puzzleDate = puzzleData.print_date;
-        // const acrossClues = puzzleData.puzzle_data.clues.A;
-        // const downClues = puzzleData.puzzle_data.clues.D;
-        // const puzzleFill = puzzleData.puzzle_data.answers;
+        const puzzleWidth = puzzleData.puzzle_meta.width;
+        const puzzleDotw = puzzleData.puzzle_meta.printDotw;
+        const puzzleDate = puzzleData.print_date;
+        const acrossClues = puzzleData.puzzle_data.clues.A;
+        const downClues = puzzleData.puzzle_data.clues.D;
+        const puzzleFill = puzzleData.puzzle_data.answers;
 
-        // const acrossSet = setFromClues(acrossClues, puzzleDate, puzzleDotw, puzzleFill)
-        // const downSet = setFromClues(downClues, puzzleDate, puzzleDotw, puzzleFill, puzzleWidth)
+        const acrossSet = setFromClues(acrossClues, puzzleDate, puzzleDotw, puzzleFill)
+        const downSet = setFromClues(downClues, puzzleDate, puzzleDotw, puzzleFill, puzzleWidth)
 
-        // // const answerSet = new Set([...acrossSet, ...downSet]);
-        // const answerSet = [...acrossSet, ...downSet]
+        const answerSet = [...acrossSet, ...downSet]
 
-        // for (const jsonAnswer of answerSet) {
-        // const answer = JSON.parse(jsonAnswer);
-        // const {data, error} = await supabase
-        //     .from("daily")
-        //     .upsert(answerSet, {onConflict: ['clue', 'answer']});
-            // const { data, error } = await supabase
-            //     .from('daily_answers')
-            //     .upsert([
-            //         {
-            //             clue: answer.clue,
-            //             answer: answer.answer,
-            //             date: answer.date,
-            //             dotw: answer.dotw
-            //         } 
-            //     ], {
-            //         onConflict: ['clue', 'answer'] // Specify the conflict target
-            //     });
+        const {data, error} = await supabase
+            .from("daily")
+            .upsert(answerSet, {onConflict: ['clue', 'answer']});
 
-        // if (error) {
-        //     return response.status(500).json({ message: 'Failed to update the database', error: error.message})
-        // }
-        // return response.status(200).json({ message: 'Database successfully updated', pushedSet: answerSet});
+        if (error) {
+            return response.status(500).json({ message: 'Failed to update the database', error: error.message})
+        }
+
+        return response.status(200).json({ message: 'Database successfully updated', pushedSet: answerSet});
     } catch (error) {
         return response.status(500).json({ message: 'Failed to update the database', error: error.message})
     }
