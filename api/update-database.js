@@ -9,8 +9,10 @@ export default async function updateDatabase(request, response) {
         const puzzleResp = await fetch(`https://www.nytimes.com/svc/crosswords/v2/puzzle/${puzzleId}.json`, {
             headers: { 'Cookie': `NYT-S=${process.env.NYT_COOKIE}` }
         });
+
+        const puzzle = await puzzleResp.json()
         
-        return response.status(200).json({id: puzzleId, result: puzzleResp});
+        return response.status(200).json({id: puzzleId, result: puzzle, cookie: process.env.NYT_COOKIE});
         // const puzzleData = puzzleResp.data.results[0];
 
         // const puzzleWidth = puzzleData.puzzle_meta.width;
