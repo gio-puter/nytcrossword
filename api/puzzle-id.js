@@ -1,6 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
-
-export default async function getRecentPuzzleID(req, res) {
+export default async function get_puzzle_id(req, res) {
     try {
         const puzzleResp = await fetch("https://www.nytimes.com/svc/crosswords/v3/puzzles.json", {
             headers: { 'Cookie': `NYT-S=${process.env.NYT_COOKIE}` }
