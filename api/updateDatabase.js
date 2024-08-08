@@ -38,7 +38,7 @@ export default async function updateDatabase(request, response) {
             //             answer: answer.answer,
             //             date: answer.date,
             //             dotw: answer.dotw
-            //         }
+            //         } 
             //     ], {
             //         onConflict: ['clue', 'answer'] // Specify the conflict target
             //     });
