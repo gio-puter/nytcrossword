@@ -27,7 +27,7 @@ export default async function updateDatabase(request, response) {
         const answerSet = [...acrossSet, ...downSet]
 
         const {data, error} = await supabase
-            .from("daily")
+            .from("daily_answers")
             .upsert(answerSet, {onConflict: ['clue', 'answer'], ignoreDuplicates: true});
 
         if (error) {
