@@ -1,0 +1,14 @@
+/**
+{
+    "crons": [
+      {
+        "path": "/api/update-database",
+        "schedule": "0 23 * * 6,0"
+      },
+      {
+        "path": "/api/update-database",
+        "schedule": "0 3 * * 1-5"
+      }
+    ]
+}
+*/
