@@ -33,8 +33,8 @@ function Quiz() {
             setAnswer(data[0].answer)
             setAnswerResponse(null)
 
-            setHintsUsed(Array(response.row.answer.length).fill(false))
-            setInputValues(Array(response.row.answer.length).fill(''))
+            setHintsUsed(Array(data[0].answer.length).fill(false))
+            setInputValues(Array(data[0].answer.length).fill(''))
             setFinished(false)
             return data;
         }
@@ -106,7 +106,7 @@ function Quiz() {
             return;
         }
 
-        const {data, error} = await supabase.rpc('check_answer', {clue: clue, answer: inputAnswer.toUpperCase()})
+        const {data, error} = await supabase.rpc('check_answer', {clue: clue, answer: inputValues.join('').toUpperCase()})
 
         if (error) {
             // console.error('Error fetching data', error);
@@ -124,7 +124,7 @@ function Quiz() {
         }
     }
 
-    function handleAnswerKeyDown(event) {
+    function handleAnswerKeyDown(event, index) {
         if (event.key === "Enter" && inputValues.join('')) {handleAnswerSearch()}
         else if (event.key === "Backspace") {
             const newValues = [...inputValues]
