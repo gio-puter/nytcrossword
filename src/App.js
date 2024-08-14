@@ -14,7 +14,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="search" element={<SearchResults />} />
           <Route path="quiz" element={<Quiz />} />
-          {/* <Route path="*" element={<NoPage />} /> */}
+          <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
