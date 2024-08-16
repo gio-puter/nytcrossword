@@ -62,8 +62,8 @@ function Quiz() {
             setAnswer(data[0].answer)
             setAnswerResponse(null)
 
-            setHintsUsed(Array(data[0].answer.length).fill(false))
             setInputValues(Array(data[0].answer.length).fill(''))
+            setHintsUsed(Array(data[0].answer.length).fill(false))
             setFinished(false)
             return data;
         }
