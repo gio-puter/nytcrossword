@@ -22,6 +22,30 @@ function Quiz() {
         }
     }, [location.search]);
 
+
+    useEffect(() => {
+        // Focus the first empty input box when inputValues are initialized
+        if (finished) {return}
+        
+        if (inputValues.length > 0) {
+            const firstEmptyIndex = inputValues.findIndex((value, index) => value === '' && !hintsUsed[index]);
+            const lastEmptyIndex = inputValues
+                .map((value, index) => ({ value, index })) // Create an array of objects with value and index
+                .reverse() // Reverse the array to start from the end
+                .find(({ _, index }) => !hintsUsed[index])?.index; // Find the first empty box from the end
+            
+            // console.log("First empty index:", firstEmptyIndex)
+            // console.log("First non hint:", lastEmptyIndex)
+            if (firstEmptyIndex !== -1) {
+                document.getElementById(`input-${firstEmptyIndex}`).focus();
+            } else {
+                try {
+                    document.getElementById(`input-${lastEmptyIndex}`).focus();
+                } catch (error) {}
+            }
+        }
+    }, [clue, hintsUsed]);
+
     async function fetchClue() {
         const {data, error} = await supabase.rpc('fetch_random');
 
