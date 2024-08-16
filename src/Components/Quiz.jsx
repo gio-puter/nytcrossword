@@ -26,16 +26,19 @@ function Quiz() {
     useEffect(() => {
         // Focus the first empty input box when inputValues are initialized
         if (finished) {return}
+
+        console.log("Clue added")
         
         if (inputValues.length > 0) {
+            console.log("Input values has length")
             const firstEmptyIndex = inputValues.findIndex((value, index) => value === '' && !hintsUsed[index]);
             const lastEmptyIndex = inputValues
                 .map((value, index) => ({ value, index })) // Create an array of objects with value and index
                 .reverse() // Reverse the array to start from the end
                 .find(({ _, index }) => !hintsUsed[index])?.index; // Find the first empty box from the end
             
-            // console.log("First empty index:", firstEmptyIndex)
-            // console.log("First non hint:", lastEmptyIndex)
+            console.log("First empty index:", firstEmptyIndex)
+            console.log("First non hint:", lastEmptyIndex)
             if (firstEmptyIndex !== -1) {
                 document.getElementById(`input-${firstEmptyIndex}`).focus();
             } else {
@@ -43,6 +46,8 @@ function Quiz() {
                     document.getElementById(`input-${lastEmptyIndex}`).focus();
                 } catch (error) {}
             }
+        } else {
+            console.log("Input values empty");
         }
     }, [clue, hintsUsed]);
 
