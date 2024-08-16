@@ -27,7 +27,7 @@ function Quiz() {
         // Focus the first empty input box when inputValues are initialized
         if (finished) {return}
 
-        // console.log("Clue added")
+        console.log("Clue added")
         
         if (inputValues.length > 0) {
             console.log("Input values has length")
@@ -62,9 +62,9 @@ function Quiz() {
             setAnswer(data[0].answer)
             setAnswerResponse(null)
 
+            setFinished(false)
             setInputValues(Array(data[0].answer.length).fill(''))
             setHintsUsed(Array(data[0].answer.length).fill(false))
-            setFinished(false)
             return data;
         }
     }
