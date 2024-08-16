@@ -27,7 +27,7 @@ function Quiz() {
         // Focus the first empty input box when inputValues are initialized
         if (finished) {return}
 
-        console.log("Clue added")
+        // console.log("Clue added")
         
         if (inputValues.length > 0) {
             console.log("Input values has length")
@@ -49,7 +49,7 @@ function Quiz() {
         } else {
             console.log("Input values empty");
         }
-    }, [clue, hintsUsed]);
+    }, [inputValues, hintsUsed]);
 
     async function fetchClue() {
         const {data, error} = await supabase.rpc('fetch_random');
