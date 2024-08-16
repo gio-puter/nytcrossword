@@ -33,37 +33,10 @@ function SearchResults() {
 
         if (error) {
             // console.error('Error fetching data', error)
-            switch (error.code) {
-                case '22P02':
-                    setError(<p style={{ color: "red" }}>INVALID PARAMETERS</p>)
-                    break;
-                case '08003':
-                    setError(<p style={{ color: "red" }}>DATABASE CONNECTION ERROR. TRY AGAIN LATER</p>)
-                    break;
-                default:
-                    setError(<p style={{ color: "red" }}>UNEXPECTED ERROR. TRY A DIFFERENT INPUT</p>)
-                    break;
-            }
-
-            setResult(null);
+            handleError(error);
         } else {
             // console.log('Data: ', data)
-
-            if (data.length === 0) {
-                setError(<p style={{ color: "red" }}>NO ANSWERS FOUND FOR: {clue}</p>)
-                setResult(null)
-                return data;
-            }
-
-            let out = []
-            data.forEach(row => {
-                out.push(<p key={out.length}>{row.answer}</p>)
-            })
-
-            // console.log(out)
-            setResult(out)
-            setError(null)
-            return data
+            handleSuccess(data, clue, "answer");
         }
     }
 
@@ -72,37 +45,49 @@ function SearchResults() {
         
         if (error) {
             // console.error('Error fetching data', error)
-            switch (error.code) {
-                case '22P02':
-                    setError(<p style={{ color: "red" }}>INVALID PARAMETERS</p>)
-                    break;
-                case '08003':
-                    setError(<p style={{ color: "red" }}>DATABASE CONNECTION ERROR. TRY AGAIN LATER</p>)
-                    break;
-                default:
-                    setError(<p style={{ color: "red" }}>UNEXPECTED ERROR. TRY A DIFFERENT INPUT</p>)
-                    break;
-            }
-
-            setResult(null);
-
+            handleError(error);
         } else {
             // console.log('Data: ', data)
+            handleSuccess(data, answer, "clue");
+        }
+    }
 
-            if (data.length === 0) {
-                setError(<p style={{ color: "red" }}>NO CLUES FOUND FOR: {answer}</p>)
-                setResult(null)
-                return data;
-            }
+    function handleError(error) {
+        let message;
+        switch (error.code) {
+            case "22P02":
+                message = "INVALID PARAMETERS";
+                break;
+            case "08003":
+                message = "DATABASE CONNECTION ERROR. TRY AGAIN LATER";
+                break;
+            default:
+                message = "UNEXPECTED ERROR. TRY A DIFFERENT INPUT";
+        }
+        setError(<p style={{ color: "red" }}>{message}</p>);
+        setResult(null);
+    }
 
-            let out = []
-            data.forEach(row => {
-                out.push(<p key={out.length}>{row.clue}</p>)
-            })
+    function handleSuccess(data, query, type) {
+        if (data.length === 0) {
+            setError(<p style={{ color: "red" }}>NO {type.toUpperCase()}S FOUND FOR: {query}</p>)
+            setResult(null)
+        } else {
+            // Sort results alphabetically before rendering
+            data.sort((a, b) => {
+                if (type === "answer") {
+                    return a.answer.localeCompare(b.answer);
+                } else if (type === "clue") {
+                    return a.clue.localeCompare(b.clue);
+                }
+            });
 
-            setResult(out)
-            setError(null)
-            return data
+            const out = data.map((row, index) => (
+                <p key={index}>{type === "answer" ? row.answer : row.clue}</p>
+            ));
+
+            setResult(out);
+            setError(null);
         }
     }
 
@@ -150,7 +135,11 @@ function SearchResults() {
 
             {clue && !error && (<div><p>Showing answer(s) to: {clue}</p></div>)}
             {answer && !error && (<div><p>Showing clue(s) for: {answer}</p></div>)}
-            {result && !error && (<div>{result}</div>)}
+            {result && !error && (
+                <div className={`results-container ${result.length >= 3 ? "three-columns" : ""}`}>
+                    {result}
+                </div>
+            )}
 
         </>
     );
