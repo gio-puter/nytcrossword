@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 function Home() {
 
     const [clue, setClue] = useState("")
-    // const [error, setError] = useState(null)
-    // const [result, setResult] = useState(null)
 
     const navigate = useNavigate()
 

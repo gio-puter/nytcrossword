@@ -116,31 +116,49 @@ function SearchResults() {
 
     return (
         <>
-            <h1>Search Results</h1>
+        <h1>Search Results</h1>
 
-            <div className="container">
-                <div className="search-section">
-                    <input type='text' placeholder='Clue' value={inputClue} onChange={(e) => setInputClue(e.target.value)} onKeyDown={handleClueKeyDown}></input>
-                    <input type='text' placeholder='Answer Length' value={inputAnswerLength} onChange={(e) => setInputAnswerLength(e.target.value)} onKeyDown={handleClueKeyDown}></input>
-                    <button onClick={handleClueSearch}>Search Clue</button>
-                </div>
-
-                <div className="search-section">
-                    <input type='text' placeholder='Answer' value={inputAnswer} onChange={(e) => setInputAnswer(e.target.value)} onKeyDown={handleAnswerKeyDown}></input>
-                    <button onClick={handleAnswerSearch}>Search Answer</button>
-                </div>
+        <div className="container">
+            <div className="search-section">
+                <input
+                    type="text"
+                    placeholder="Clue"
+                    value={inputClue}
+                    onChange={(e) => setInputClue(e.target.value)}
+                    onKeyDown={handleClueKeyDown}
+                />
+                <input
+                    type="text"
+                    placeholder="Answer Length"
+                    value={inputAnswerLength}
+                    onChange={(e) => setInputAnswerLength(e.target.value)}
+                    onKeyDown={handleClueKeyDown}
+                />
+                <button onClick={handleClueSearch}>Search Clue</button>
             </div>
 
-            {error && (<div>{error}</div>)}
+            <div className="search-section">
+                <input
+                    type="text"
+                    placeholder="Answer"
+                    value={inputAnswer}
+                    onChange={(e) => setInputAnswer(e.target.value)}
+                    onKeyDown={handleAnswerKeyDown}
+                />
+                <button onClick={handleAnswerSearch}>Search Answer</button>
+            </div>
+        </div>
 
-            {clue && !error && (<div><p>Showing answer(s) to: {clue}</p></div>)}
-            {answer && !error && (<div><p>Showing clue(s) for: {answer}</p></div>)}
-            {result && !error && (
-                <div className={`results-container ${result.length >= 3 ? "three-columns" : ""}`}>
-                    {result}
-                </div>
-            )}
+        {error && <div>{error}</div>}
 
+        {clue && !error && <div><p className="answer-clue-prompt">Showing answer(s) to: {clue}</p></div>}
+        {answer && !error && <div><p className="answer-clue-prompt">Showing clue(s) for: {answer}</p></div>}
+
+        {result && !error && (
+            <div className={`results-container ${result.length >= 3 ? "three-columns" : ""}`}>
+                {result}
+            </div>
+        )}
         </>
     );
 
