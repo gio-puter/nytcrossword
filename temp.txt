@@ -3,12 +3,14 @@
     "crons": [
       {
         "path": "/api/update-database",
-        "schedule": "0 23 * * 0,6" <-- 23 during standard time, 22 during daylight savings
+        "schedule": "0 24 * * 0,6" <-- 25 during standard time, 24 during daylight savings
       },
       {
         "path": "/api/update-database",
         "schedule": "0 3 * * 1-5" <-- 3 during standard time, 2 during daylight savings
       }
     ]
+
+    
 }
 */
