@@ -3,6 +3,16 @@ import { createClient } from "@supabase/supabase-js";
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
 
 export default async function updateDatabase(request, response) {
+    const id = await getRecentPuzzleID();
+
+    const puz = await fetch(`https://www.nytimes.com/svc/crosswords/v2/puzzle/${puzzleId}.json`, {
+        headers: { 'Cookie': `NYT-S=${process.env.NYT_COOKIE}` }
+    });
+
+    const puzResp = await puz.json()
+    
+    const resp = puzResp.results[0];
+
     try {
         const puzzleId = await getRecentPuzzleID();
 
@@ -36,7 +46,7 @@ export default async function updateDatabase(request, response) {
 
         return response.status(200).json({ message: 'Database successfully updated', pushedSet: answerSet});
     } catch (error) {
-        return response.status(500).json({ message: 'Failed to update the database', error: error.message})
+        return response.status(500).json({ message: 'Failed to update the database', error: error.message, response: resp})
     }
 
 }
