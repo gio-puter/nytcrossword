@@ -6,7 +6,7 @@ export default async function updateDatabase(request, response) {
     try {
         const id = await getRecentPuzzleID();
 
-        const puz = await fetch(`https://www.nytimes.com/svc/crosswords/v2/puzzle/${puzzleId}.json`, {
+        const puz = await fetch(`https://www.nytimes.com/svc/crosswords/v2/puzzle/${id}.json`, {
             headers: { 'Cookie': `NYT-S=${process.env.NYT_COOKIE}` }
         });
 
