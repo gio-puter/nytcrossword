@@ -31,7 +31,7 @@ export default async function updateDatabase(request, response) {
             .upsert(answerSet, {onConflict: ['clue', 'answer'], ignoreDuplicates: true});
 
         if (error) {
-            return response.status(500).json({ message: 'Failed to update the database', error: error.message})
+            return response.status(500).json({ message: 'Failed to update the database', data: data, error: error.message})
         }
 
         return response.status(200).json({ message: 'Database successfully updated', pushedSet: answerSet});
