@@ -3,51 +3,55 @@ import { createClient } from "@supabase/supabase-js";
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
 
 export default async function updateDatabase(request, response) {
-    const id = await getRecentPuzzleID();
-
-    const puz = await fetch(`https://www.nytimes.com/svc/crosswords/v2/puzzle/${puzzleId}.json`, {
-        headers: { 'Cookie': `NYT-S=${process.env.NYT_COOKIE}` }
-    });
-
-    const puzResp = await puz.json()
-    
-    const resp = puzResp.results[0];
-
     try {
-        const puzzleId = await getRecentPuzzleID();
+        const id = await getRecentPuzzleID();
 
-        const puzzle = await fetch(`https://www.nytimes.com/svc/crosswords/v2/puzzle/${puzzleId}.json`, {
+        const puz = await fetch(`https://www.nytimes.com/svc/crosswords/v2/puzzle/${puzzleId}.json`, {
             headers: { 'Cookie': `NYT-S=${process.env.NYT_COOKIE}` }
         });
 
-        const puzzleResp = await puzzle.json()
-        
-        const puzzleData = puzzleResp.results[0];
-
-        const puzzleWidth = puzzleData.puzzle_meta.width;
-        const puzzleDotw = puzzleData.puzzle_meta.printDotw;
-        const puzzleDate = puzzleData.print_date;
-        const acrossClues = puzzleData.puzzle_data.clues.A;
-        const downClues = puzzleData.puzzle_data.clues.D;
-        const puzzleFill = puzzleData.puzzle_data.answers;
-
-        const acrossSet = setFromClues(acrossClues, puzzleDate, puzzleDotw, puzzleFill)
-        const downSet = setFromClues(downClues, puzzleDate, puzzleDotw, puzzleFill, puzzleWidth)
-
-        const answerSet = [...acrossSet, ...downSet]
-
-        const {data, error} = await supabase
-            .from("daily_answers")
-            .upsert(answerSet, {onConflict: ['clue', 'answer'], ignoreDuplicates: true});
-
-        if (error) {
-            return response.status(500).json({ message: 'Failed to update the database', data: data, error: error.message})
-        }
-
-        return response.status(200).json({ message: 'Database successfully updated', pushedSet: answerSet});
+        const puzResp = await puz.json()
+        return response.status(200).json({message: puzResp})
     } catch (error) {
-        return response.status(500).json({ message: 'Failed to update the database', error: error.message, response: resp})
+        return response.status(500).json({ message: 'Failed to update the database', error: error.message})
     }
+
+    // try {
+    //     const puzzleId = await getRecentPuzzleID();
+
+    //     const puzzle = await fetch(`https://www.nytimes.com/svc/crosswords/v2/puzzle/${puzzleId}.json`, {
+    //         headers: { 'Cookie': `NYT-S=${process.env.NYT_COOKIE}` }
+    //     });
+
+    //     const puzzleResp = await puzzle.json()
+        
+    //     const puzzleData = puzzleResp.results[0];
+
+    //     const puzzleWidth = puzzleData.puzzle_meta.width;
+    //     const puzzleDotw = puzzleData.puzzle_meta.printDotw;
+    //     const puzzleDate = puzzleData.print_date;
+    //     const acrossClues = puzzleData.puzzle_data.clues.A;
+    //     const downClues = puzzleData.puzzle_data.clues.D;
+    //     const puzzleFill = puzzleData.puzzle_data.answers;
+
+    //     const acrossSet = setFromClues(acrossClues, puzzleDate, puzzleDotw, puzzleFill)
+    //     const downSet = setFromClues(downClues, puzzleDate, puzzleDotw, puzzleFill, puzzleWidth)
+
+    //     const answerSet = [...acrossSet, ...downSet]
+
+    //     const {data, error} = await supabase
+    //         .from("daily_answers")
+    //         .upsert(answerSet, {onConflict: ['clue', 'answer'], ignoreDuplicates: true});
+
+    //     if (error) {
+    //         return response.status(500).json({ message: 'Failed to update the database', data: data, error: error.message})
+    //     }
+
+    //     return response.status(200).json({ message: 'Database successfully updated', pushedSet: answerSet});
+    // } catch (error) {
+    //     return response.status(500).json({ message: 'Failed to update the database', error: error.message, response: puzResp})
+    // }
+
 
 }
 
